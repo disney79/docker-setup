@@ -7,6 +7,6 @@ mqtt:
   password: KEIGEHEIM
 frontend: true
 advanced:
-  pan_id: 6762
+  pan_id: 6770
 serial:
   port: /dev/ttyUSB0
