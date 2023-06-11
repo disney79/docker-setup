@@ -1,0 +1,64 @@
+version: '3.7'
+
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce
+    restart: always
+    ports:
+      - "9000:9000/tcp"
+    environment:
+      - TZ=Europe/London
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/portainer:/data
+
+  ############## Home automation ##############
+
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - /opt/homeassistant/config:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    image: koenkk/zigbee2mqtt
+    restart: unless-stopped
+    volumes:
+      - /opt/zigbee2mqtt/data:/app/data
+      - /run/udev:/run/udev:ro
+    ports:
+      - 81:8080
+    environment:
+      - TZ=Europe/Amsterdam
+    devices: 
+      - /dev/ttyUSB0:/dev/ttyUSB0
+
+  mosquitto: 
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    volumes:
+      - /opt/mosquitto:/mosquitto
+      - /opt/mosquitto/data:/mosquitto/data
+      - /opt/mosquitto/log:/mosquitto/log
+    ports:
+      - 1883:1883
+      - 9001:9001    
+    restart: unless-stopped
+
+  nodered:
+    container_name: Node-RED
+    image: nodered/node-red:latest
+    environment:
+      - TZ=Europe/Amsterdam
+    ports:
+      - "1880:1880"
+    # user: 1000:1000
+    volumes:
+      - /opt/nodered/data:/data
+    restart: unless-stopped

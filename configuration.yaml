@@ -1,0 +1,12 @@
+homeassistant: true
+permit_join: true
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://192.168.1.2
+  user: hass
+  password: KEIGEHEIM
+frontend: true
+advanced:
+  pan_id: 6762
+serial:
+  port: /dev/ttyUSB0
